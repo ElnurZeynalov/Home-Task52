@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+        .add-btn {
+            width: 100px;
+            height: 100px;
+            background-color: transparent;
+            border: 2px solid lightgray;
+            border-radius: 50%;
+            font-size: 32px;
+            text-align: center;
+            color: rgb(129, 129, 129);
+        }
+        
+        .action-btn {
+            display: none;
+        }
+        
+        #DisableActions {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="btn btn-primary mt-2" id="EnableActions">Enable Actions</button>
+        <button class="btn btn-primary mt-2" id="DisableActions">Disable Actions</button>
+        <div class="row my-5" id="platform">
+            <div class="col-3 my-2">
+                <div class="card w-100 h-100 d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="form-group w-50 mt-3 m-auto">
+                    <label for="FullName ">FullName:</label>
+                    <input class="form-control " type="text " id="FullName ">
+                </div>
+                <div class="form-group w-50 mt-3 m-auto">
+                    <label for="PhotoUrl ">Photo</label>
+                    <input class="form-control " type="text " id="PhotoUrl ">
+                </div>
+                <button class="btn btn-primary my-3 w-25 m-auto" id="Create">Create</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js " integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2 " crossorigin="anonymous "></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js "></script>
+    <script>
+        $("#Create").click(function() {
+            var name = $("#FullName ").val();
+            var photo = $("#PhotoUrl ").val();
+            $(function() {
+                $data = {
+                    fullName: name,
+                    photoUrl: photo
+                }
+                $link = "http://localhost:27208/api/actor/create "
+                $.ajax({
+                    type: "POST ",
+                    contentType: "application/json; charset=utf-8 ",
+                    url: $link,
+                    data: JSON.stringify($data),
+                    dataType: "json ",
+                    success: function(result) {
+                        alert("Oldu " + result)
+                    },
+                    error: function() {
+                        console.log(JSON.stringify($data))
+                    }
+                })
+            })
+        })
+    </script>
+    <script>
+        fetch("http://localhost:27208/api/Actor")
+            .then(res => res.json())
+            .then(data => data.forEach(element => {
+                console.log("a")
+                document.getElementById("platform").innerHTML +=
+                    `
+            <div class="col-3 my-2">
+                <div class="card h-100">
+                    <img class="card-img-top h-100" src="${element.photoUrl}" alt="Card image cap ">
+                    <div class="card-body ">
+                        <h5 class="card-title ">${element.fullName}</h5>
+                        <button class="btn btn-primary action-btn">Edit</button>
+                        <button class="btn btn-danger action-btn">Delete</button>
+                    </div>
+                </div>
+            </div>
+                    `
+            }))
+        $("#EnableActions").click(function() {
+            $(".action-btn").css({
+                "display": "inline-block"
+            })
+            $("#EnableActions").css({
+                "display": "none"
+            })
+            $("#DisableActions").css({
+                "display": "inline-block"
+            })
+        })
+        $("#DisableActions").click(function() {
+            $(".action-btn").css({
+                "display": "none"
+            })
+            $("#EnableActions").css({
+                "display": "inline-block"
+            })
+            $("#DisableActions").css({
+                "display": "none"
+            })
+        })
+    </script>
+</body>
+
+</html>
